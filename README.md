@@ -23,15 +23,15 @@ Currently there is one method, ``search``. 🔍
 ```js
 const { Spotify } = require('node-spotify-api');
 
-const { search } = new Spotify({
+const SpotifyClient = new Spotify({
     id: 'client id',
     secret: 'client secret'
 });
 
 // later on ...
-await search({ type: 'track', query: 'I Me Mine' });
-await search({ type: 'album', query: 'Let It Be' });
-await search({ type: 'artist', query: 'The Beatles' });
+await SpotifyClient.search({ type: 'track', query: 'I Me Mine' });
+await SpotifyClient.search({ type: 'album', query: 'Let It Be' });
+await SpotifyClient.search({ type: 'artist', query: 'The Beatles' });
 ```
 
 # Search
