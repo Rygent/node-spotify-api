@@ -1,16 +1,26 @@
 {
-  "name": "node-spotify-api",
-  "version": "1.1.1",
-  "description": "A simple wrapper for the spotify api",
+  "name": "spotify-api",
+  "version": "2.0.0",
+  "description": "A (very) simple wrapper for the spotify api",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ceckenrode/node-spotify-api.git"
+    "url": "git+https://github.com/khafradev/node-spotify-api.git"
   },
-  "main": "index.js",
+  "main": "src/index.js",
   "author": "Christian Eckenrode <christian@develop.io>",
   "license": "ISC",
   "dependencies": {
-    "request": "^2.81.0",
-    "request-promise": "^4.2.1"
-  }
+    "node-fetch": "^2.6.0"
+  },
+  "bugs": {
+    "url": "https://github.com/khafradev/node-spotify-api/issues"
+  },
+  "homepage": "https://github.com/khafradev/node-spotify-api#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "spotify-api",
+    "spotify"
+  ]
 }

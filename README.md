@@ -1,106 +1,48 @@
-# Node Spotify API 🚀 🎶 
+# Node Spotify API
 
-A simple to use API library for the Spotify REST API. 
+A simple to use API library for the Spotify REST API.
+Only supports searching for tracks|albums|artists however the 2 former ones have not been tested. 
 
-## Installation
+# What's Different?
+* Uses ``node-fetch`` instead of ``request-promise`` (1 dependency instead of x).
+* The code base has been completely rewritten and halved.
+* Code is much easier to read and doesn't use weird mixtures of Promises and async/await.
+* Returns the same results, a drop-in replacement with options (some missing as of the initial release).
+* Added in a copy of the [ISC LICENSE](./LICENSE) based on the package.json 
 
-`npm install --save node-spotify-api`
+# Installation
 
-## API
+``npm i khafradev/node-spotify-api``
 
-Currently there are two methods available, `search` and `request` 🔍
+# API
 
-### Search
+Currently there is one method, ``search``. 🔍
 
-`search` is the EASIEST way to find an artist, album, or track.
-
-```js
-search: function({ type: 'artist OR album OR track', query: 'My search query', limit: 20 }, callback);
-```
-
-#### Example
-
-```js
-var Spotify = require('node-spotify-api');
-
-var spotify = new Spotify({
-  id: <your spotify client id>,
-  secret: <your spotify client secret>
-});
-
-spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
-  if (err) {
-    return console.log('Error occurred: ' + err);
-  }
-
-console.log(data); 
-});
-```
-
-Note: The `limit` property is optional and the search will default to 20 if one is not supplied.
-
-#### Usage with Promises
-
-This package also optionally works with promises. Just omit the callback parameter and the search method returns a promise object containing the response:
+# Example
 
 ```js
-var Spotify = require('node-spotify-api');
+const { Spotify } = require('node-spotify-api');
 
-var spotify = new Spotify({
-  id: <your spotify client id>,
-  secret: <your spotify client secret>
+const { search } = new Spotify({
+    id: 'client id',
+    secret: 'client secret'
 });
 
-spotify
-  .search({ type: 'track', query: 'All the Small Things' })
-  .then(function(response) {
-    console.log(response);
-  })
-  .catch(function(err) {
-    console.log(err);
-  });
+// later on ...
+await search({ type: 'track', query: 'I Me Mine' });
+await search({ type: 'album', query: 'Let It Be' });
+await search({ type: 'artist', query: 'The Beatles' });
 ```
 
-### Request
+# Search
 
-`request` can be used to make API requests to any Spotify endpoint you supply.
-
-#### Example
+``search`` is the EASIEST way to find an artist, album, or track.
+Neither artist or album have been tested with this fork.
 
 ```js
-var Spotify = require('node-spotify-api');
-
-var spotify = new Spotify({
-  id: <your spotify client id>,
-  secret: <your spotify client secret>
-});
-
-spotify
-  .request('https://api.spotify.com/v1/tracks/7yCPwWs66K8Ba5lFuU2bcx')
-  .then(function(data) {
-    console.log(data); 
-  })
-  .catch(function(err) {
-    console.error('Error occurred: ' + err); 
-  });
+<SpotifyClient>.search({ type: 'artist|album|track', query: 'My search query' });
 ```
 
-### Don't have a Spotify client id and client secret?
-
-The Spotify API requires an authentication token to work. This package will perform all of the work of generating an authentication token for you, but you will still need to supply a client id and client secret.
-
-Sign up for a Spotify developer account [here](https://developer.spotify.com/my-applications/#!/login). If you already have a Spotify account, you'll just have to log in. A membership can be paid or free, it makes no difference when it comes to using the Spotify API.
-
-Once you're signed up, navigate to <https://developer.spotify.com/my-applications/>. You should be presented with the following page:
-
-![Applications](Images/1-Applications.png)
-
-Click the button to "Create An App". Once you're at the next page, fill in the required fields.
-
-![Required](Images/2-Required.png)
-
-Submit the form and on the next page, you should be presented with a client id and secret.
-
-![Key](Images/3-Key.png)
-
-And you're all set!! 🎉 
+# Usage with Promises/Callbacks
+* This package only supports Promises or async/await.
+* Use [Util.callbackify](https://nodejs.org/api/util.html#util_util_callbackify_original) to use with callbacks (but why?).
