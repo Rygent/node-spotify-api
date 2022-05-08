@@ -4,7 +4,7 @@ A simple to use API library for the Spotify REST API.
 Only supports searching for tracks|albums|artists however the 2 former ones have not been tested. 
 
 # What's Different?
-* Uses ``node-fetch`` instead of ``request-promise`` (1 dependency instead of x).
+* Uses ``undici`` instead of ``request-promise`` (1 dependency instead of x).
 * The code base has been completely rewritten and halved.
 * Code is much easier to read and doesn't use weird mixtures of Promises and async/await.
 * Returns the same results, a drop-in replacement with options (some missing as of the initial release).
@@ -12,7 +12,7 @@ Only supports searching for tracks|albums|artists however the 2 former ones have
 
 # Installation
 
-``npm i khafradev/node-spotify-api``
+``npm i rygent/node-spotify-api``
 
 # API
 

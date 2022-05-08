@@ -1,17 +1,17 @@
-const fetch = require('node-fetch');
-const { URLSearchParams } = require('url');
+const { fetch } = require('undici');
 
-const TOKEN_URI = "https://accounts.spotify.com/api/token";
-const SEARCH_URI = "https://api.spotify.com/v1/search";
+const TOKEN_URI = 'https://accounts.spotify.com/api/token';
+const SEARCH_URI = 'https://api.spotify.com/v1/search';
 
-class Spotify {
-    constructor({ id, secret }) {
-        this.creds = { id: id, secret: secret };
+module.exports = class Spotify {
+
+    constructor(credentials) {
+        this.credentials = { id: credentials.id, secret: credentials.secret };
     }
-  
-    async search(search) {
+
+    async search(options) {
         try {
-            const uri = `${SEARCH_URI}?type=${search.type}&q=${encodeURIComponent(search.query)}&limit=20`;
+            const uri = `${SEARCH_URI}?type=${options.type}&q=${encodeURIComponent(options.query)}&limit=${options.limit || 20}`;
 
             const res = await fetch(uri, {
                 method: 'GET',
@@ -23,27 +23,26 @@ class Spotify {
             } 
             
             throw new Error(`Received status ${res.status} (${res.statusText})`);
-        } catch(err) {
-            throw err;
+        } catch(error) {
+            throw error;
         }
     }
-  
-    async setToken() {
-        const params = new URLSearchParams(); // based on node-fetch docs
-        params.append('grant_type', 'client_credentials');
 
+    async setToken() {
         try {
             const res = await fetch(TOKEN_URI, {
                 method: 'POST',
-                body: params,
-                headers: {
-                    Authorization: `Basic ${Buffer.from(`${this.creds.id}:${this.creds.secret}`, 'utf8').toString('base64')}`
-                }
+                body: await this.encode({
+                    grant_type: 'client_credentials',
+                    client_id: this.credentials.id,
+                    client_secret: this.credentials.secret
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
 
             if(res.status === 200) {
                 this.token = await res.json();
-                this.expires = new Date().getTime() + res.expires_in * 1000; // in milliseconds
+                this.expires = new Date().getTime() + this.token.expires_in * 1000;
                 return true;
             }            
 
@@ -52,7 +51,7 @@ class Spotify {
             throw err;
         }
     }
-  
+
     async getTokenHeader() {
         if(!this.token || !this.token.access_token || this.expired) {
             await this.setToken();
@@ -61,6 +60,15 @@ class Spotify {
         return { Authorization: `Bearer ${this.token.access_token}` };
     }
 
+    async encode(data) {
+		let string = '';
+		for (const [key, value] of Object.entries(data)) {
+			if (!value) continue;
+			string += `&${encodeURIComponent(key)}=${encodeURIComponent(`${value}`)}`;
+		}
+		return string.slice(1);
+	}
+
     get expired() {
         if(this.token && new Date().getTime() >= this.expires) {
             return true;
@@ -68,6 +76,4 @@ class Spotify {
 
         return false;
     }
-}
-  
-module.exports = { Spotify };
+};
