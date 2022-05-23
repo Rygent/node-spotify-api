@@ -5,8 +5,12 @@ const SEARCH_URI = 'https://api.spotify.com/v1/search';
 
 module.exports = class Spotify {
 
-	constructor(credentials) {
-		this.credentials = { id: credentials.id, secret: credentials.secret };
+	constructor(options) {
+		if (!options || !options.id || !options.secret) {
+			throw new Error('You must supply an object containing your Spotify client "id" and "secret".');
+		}
+
+		this.credentials = { id: options.id, secret: options.secret };
 	}
 
 	async search(options) {
