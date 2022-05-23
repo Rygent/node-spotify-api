@@ -1,6 +1,6 @@
 {
   "name": "node-spotify-api",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A (very) simple wrapper for the spotify api",
   "repository": {
     "type": "git",
@@ -9,6 +9,10 @@
   "main": "src/index.js",
   "author": "Christian Eckenrode <christian@develop.io>",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rygent/node-spotify-api/issues"
+  },
+  "homepage": "https://github.com/rygent/node-spotify-api#readme",
   "dependencies": {
     "undici": "^5.2.0"
   }
