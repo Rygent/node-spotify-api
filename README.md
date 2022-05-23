@@ -3,46 +3,51 @@
 A simple to use API library for the Spotify REST API.
 Only supports searching for tracks|albums|artists however the 2 former ones have not been tested. 
 
-# What's Different?
+#### What's Different?
 * Uses ``undici`` instead of ``request-promise`` (1 dependency instead of x).
 * The code base has been completely rewritten and halved.
 * Code is much easier to read and doesn't use weird mixtures of Promises and async/await.
 * Returns the same results, a drop-in replacement with options (some missing as of the initial release).
 * Added in a copy of the [ISC LICENSE](./LICENSE) based on the package.json 
 
-# Installation
+## Installation
 
-``npm i rygent/node-spotify-api``
+```sh-session
+npm install rygent/node-spotify-api
+yarn add rygent/node-spotify-api
+```
 
-# API
+## API
 
 Currently there is one method, ``search``. 🔍
 
-# Example
-
-```js
-const { Spotify } = require('node-spotify-api');
-
-const SpotifyClient = new Spotify({
-    id: 'client id',
-    secret: 'client secret'
-});
-
-// later on ...
-await SpotifyClient.search({ type: 'track', query: 'I Me Mine' });
-await SpotifyClient.search({ type: 'album', query: 'Let It Be' });
-await SpotifyClient.search({ type: 'artist', query: 'The Beatles' });
-```
-
-# Search
+### Search
 
 ``search`` is the EASIEST way to find an artist, album, or track.
 Neither artist or album have been tested with this fork.
 
 ```js
-<SpotifyClient>.search({ type: 'artist|album|track', query: 'My search query' });
+<spotify>.search({ type: 'artist|album|track', query: 'My search query', limit: 20 });
 ```
 
-# Usage with Promises/Callbacks
+#### Example
+
+```js
+const Spotify = require('node-spotify-api');
+
+const spotify = new Spotify({
+    id: 'client id',
+    secret: 'client secret'
+});
+
+// later on ...
+await spotify.search({ type: 'track', query: 'I Me Mine' });
+await spotify.search({ type: 'album', query: 'Let It Be' });
+await spotify.search({ type: 'artist', query: 'The Beatles' });
+```
+
+Note: The `limit` property is optional and the search will default to 20 if one is not supplied.
+
+#### Usage with Promises/Callbacks
 * This package only supports Promises or async/await.
 * Use [Util.callbackify](https://nodejs.org/api/util.html#util_util_callbackify_original) to use with callbacks (but why?).
