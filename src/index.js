@@ -1,7 +1,5 @@
+const { URLSearchParams } = require('node:url');
 const { fetch } = require('undici');
-
-const TOKEN_URI = 'https://accounts.spotify.com/api/token';
-const SEARCH_URI = 'https://api.spotify.com/v1/search';
 
 module.exports = class Spotify {
 
@@ -14,10 +12,13 @@ module.exports = class Spotify {
 	}
 
 	async search(options) {
-		try {
-			const uri = `${SEARCH_URI}?type=${options.type}&q=${encodeURIComponent(options.query)}&limit=${options.limit || 20}`;
+		const params = new URLSearchParams();
+		params.append('type', options.type);
+		params.append('q', encodeURIComponent(options.query));
+		params.append('limit', options.limit || 20);
 
-			const res = await fetch(uri, {
+		try {
+			const res = await fetch(`https://api.spotify.com/v1/search?${params}`, {
 				method: 'GET',
 				headers: { ...await this.getTokenHeader() }
 			});
@@ -33,14 +34,15 @@ module.exports = class Spotify {
 	}
 
 	async setToken() {
+		const params = new URLSearchParams();
+		params.append('grant_type', 'client_credentials');
+		params.append('client_id', this.credentials.id);
+		params.append('client_secret', this.credentials.secret);
+
 		try {
-			const res = await fetch(TOKEN_URI, {
+			const res = await fetch('https://accounts.spotify.com/api/token', {
 				method: 'POST',
-				body: await this.encode({
-					grant_type: 'client_credentials',
-					client_id: this.credentials.id,
-					client_secret: this.credentials.secret
-				}),
+				body: params,
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
 			});
 
@@ -62,15 +64,6 @@ module.exports = class Spotify {
 		}
 
 		return { Authorization: `Bearer ${this.token.access_token}` };
-	}
-
-	async encode(data) {
-		let string = '';
-		for (const [key, value] of Object.entries(data)) {
-			if (!value) continue;
-			string += `&${encodeURIComponent(key)}=${encodeURIComponent(`${value}`)}`;
-		}
-		return string.slice(1);
 	}
 
 	get expired() {
