@@ -1,6 +1,9 @@
 const { URLSearchParams } = require('node:url');
 const { fetch } = require('undici');
 
+const TOKEN_URI = 'https://accounts.spotify.com/api/token';
+const SEARCH_URI = 'https://api.spotify.com/v1/search';
+
 module.exports = class Spotify {
 
 	constructor(options) {
@@ -12,13 +15,10 @@ module.exports = class Spotify {
 	}
 
 	async search(options) {
-		const params = new URLSearchParams();
-		params.append('type', options.type);
-		params.append('q', encodeURIComponent(options.query));
-		params.append('limit', options.limit || 20);
-
 		try {
-			const res = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+			const uri = `${SEARCH_URI}?type=${options.type}&q=${encodeURIComponent(options.query)}&limit=${options.limit || 20}`;
+
+			const res = await fetch(uri, {
 				method: 'GET',
 				headers: { ...await this.getTokenHeader() }
 			});
@@ -40,7 +40,7 @@ module.exports = class Spotify {
 		params.append('client_secret', this.credentials.secret);
 
 		try {
-			const res = await fetch('https://accounts.spotify.com/api/token', {
+			const res = await fetch(TOKEN_URI, {
 				method: 'POST',
 				body: params,
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
