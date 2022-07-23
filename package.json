@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/rygent/node-spotify-api#readme",
   "dependencies": {
-    "undici": "^5.5.1"
+    "undici": "^5.8.0"
   },
   "packageManager": "yarn@3.2.2"
 }
